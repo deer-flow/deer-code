@@ -19,4 +19,7 @@ def bash_tool(command: str, reset_cwd: bool = False):
         if keep_alive_terminal:
             keep_alive_terminal.close()
         keep_alive_terminal = BashTerminal(project.root_dir)
-    return keep_alive_terminal.execute(command)
+    return (
+        keep_alive_terminal.execute(command)
+        + "\n\nIMPORTANT: Next, update the TODO list using `todo_write` immediately."
+    )

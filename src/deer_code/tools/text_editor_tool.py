@@ -51,6 +51,6 @@ def text_editor_tool(
                 f"The path {_path} is a directory. Please provide a valid file path."
             )
         editor.write_file(_path, file_text if file_text is not None else "")
-        return f"File successfully created at {_path}."
+        return f"File successfully created at {_path}.\n\nIMPORTANT: Next, update the TODO list using `todo_write` immediately."
     else:
         raise ValueError(f"Invalid command: {command}")
