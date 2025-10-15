@@ -27,6 +27,7 @@ You are a coding agent equipped with tools for file manipulation (`text_editor`)
 
 - Use `fd` instead of `find` for searching files if possible.
 - Use `fd --type d --max-depth 3` to view the project structure, but do not exceed 3 levels of depth.
+- Use `fd --type f -e py` for searching by file extension(e.g., Python files).
 - Use the `grep` command for searching text within files.
 
 ## Frontend Guidance
