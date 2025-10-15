@@ -18,4 +18,4 @@ def todo_write_tool(items: list[TodoItem]):
             ]
         )
         f.write(f"# TODOs\n\n{content}\n")
-    return f"Successfully updated the TODO list with {len(items)} items.\n\nIMPORTANT: Next, update the TODO list using `todo_write` immediately."
+    return f"Successfully updated the TODO list with {len(items)} items."
