@@ -12,7 +12,7 @@ class TodoStatus(str, Enum):
     cancelled = "cancelled"
 
 
-class TodoPriority(int, Enum):
+class TodoPriority(str, Enum):
     low = "low"
     medium = "medium"
     high = "high"
