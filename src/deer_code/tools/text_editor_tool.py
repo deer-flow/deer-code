@@ -34,13 +34,13 @@ def text_editor_tool(
     _path = Path(path)
     editor.validate_path(command, _path)
     if command == "view":
-        return f"Here's the result of running `cat -n` on {_path}:\n\n```\n{editor.view(_path, view_range)}\n```\n"
+        return f"Here's the result of running `cat -n` on {_path}:\n\n```\n{editor.view(_path, view_range)}\n```\n\nIMPORTANT: Next, update the TODO list using `todo_write` immediately."
     elif command == "str_replace" and old_str is not None and new_str is not None:
         occurrences = editor.str_replace(_path, old_str, new_str)
-        return f"Successfully replaced {occurrences} occurrences of {old_str} with {new_str} in {_path}."
+        return f"Successfully replaced {occurrences} occurrences in {_path}.\n\nIMPORTANT: Next, update the TODO list using `todo_write` immediately."
     elif command == "insert" and insert_line is not None and new_str is not None:
         editor.insert(_path, insert_line, new_str)
-        return f"Successfully inserted text at line {insert_line} in {path}."
+        return f"Successfully inserted text at line {insert_line} in {path}.\n\nIMPORTANT: Next, update the TODO list using `todo_write` immediately."
     elif command == "create":
         if _path.exists():
             raise ValueError(
