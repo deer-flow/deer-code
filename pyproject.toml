@@ -15,6 +15,8 @@ dependencies = [
     "langgraph>=0.6.10",
     "pexpect>=4.9.0",
     "pydantic>=2.12.2",
+    "rich>=14.2.0",
+    "textual>=6.3.0",
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
