@@ -11,6 +11,7 @@ def create_coding_agent():
         model=create_chat_model(),
         tools=[bash_tool, text_editor_tool, todo_write_tool],
         prompt=apply_prompt_template("coding_agent", PROJECT_ROOT=project.root_dir),
+        name="coding_agent",
     )
 
 
