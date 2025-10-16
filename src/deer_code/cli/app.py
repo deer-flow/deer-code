@@ -62,6 +62,13 @@ class ConsoleApp(App):
 
     _is_busy = False
 
+    @property
+    def is_busy(self) -> bool:
+        return self._is_busy
+
+    def set_busy(self, is_busy: bool) -> None:
+        self._is_busy = is_busy
+
     def compose(self) -> ComposeResult:
         yield Header(id="header")
         with Vertical(id="left-panel"):
@@ -127,7 +134,7 @@ class ConsoleApp(App):
                                     editor_tabs.open_file(tool_call["args"]["path"])
                     if isinstance(message, ToolMessage):
                         if message.tool_call_id in bash_tool_call_ids:
-                            output = self.extract_code(message.content)
+                            output = self._extract_code(message.content)
                             terminal_view.write(
                                 output if output.strip() != "" else "\n(empty)\n",
                                 muted=True,
@@ -137,14 +144,7 @@ class ConsoleApp(App):
         chat_input = self.query_one("#chat-input", Input)
         chat_input.focus()
 
-    @property
-    def is_busy(self) -> bool:
-        return self._is_busy
-
-    def set_busy(self, is_busy: bool) -> None:
-        self._is_busy = is_busy
-
-    def extract_code(self, text: str) -> str:
+    def _extract_code(self, text: str) -> str:
         return re.search(r"```(.*)```", text, re.DOTALL).group(1)
 
 
