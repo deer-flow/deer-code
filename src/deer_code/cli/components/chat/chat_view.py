@@ -29,7 +29,7 @@ class ChatView(Vertical):
         """Initialize chat with welcome message"""
         self.add_message(
             AIMessage(
-                content="Hello! I'm DeerCode Agent. I can help you write and execute code."
+                content="Hello! I'm DeerCode. I can help you write and execute code."
             )
         )
         self.focus_input()
