@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from textual.app import ComposeResult
-from textual.widgets import TabbedContent, TabPane
+from textual.widgets import Markdown, TabbedContent, TabPane
 
 from .code_view import CodeView
 
@@ -24,6 +24,13 @@ class EditorTabs(TabbedContent):
         self.active = tab.id
         tab.update(file_text)
         return tab
+
+    def open_welcome(self):
+        tab = TabPane(title="Welcome", id="welcome-tab")
+        markdown = Markdown(Path("docs/welcome.md").read_text(), id="welcome-view")
+        self.add_pane(tab)
+        tab.mount(markdown)
+        self.active = tab.id
 
     def _find_tab_by_path(self, path: str) -> TabPane | None:
         return self.tab_map.get(path)

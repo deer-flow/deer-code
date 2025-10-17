@@ -1,4 +1,3 @@
-import asyncio
 import re
 
 from langchain.schema import AIMessage, BaseMessage, HumanMessage
@@ -97,6 +96,8 @@ class ConsoleApp(App):
         self.theme = "deer-dark"
         self.sub_title = project.root_dir
         self.focus_input()
+        editor_tabs = self.query_one("#editor-tabs", EditorTabs)
+        editor_tabs.open_welcome()
 
     def on_input_submitted(self, event: Input.Submitted) -> None:
         if not self.is_generating and event.input.id == "chat-input":
