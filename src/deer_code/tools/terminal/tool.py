@@ -1,7 +1,8 @@
 from langchain.tools import tool
 
 from deer_code.project import project
-from deer_code.terminals import BashTerminal
+
+from .bash_terminal import BashTerminal
 
 keep_alive_terminal: BashTerminal | None = None
 

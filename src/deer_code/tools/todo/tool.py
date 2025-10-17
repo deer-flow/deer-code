@@ -1,6 +1,6 @@
 from langchain.agents import tool
 
-from deer_code.todo.types import TodoItem
+from .types import TodoItem
 
 
 @tool("todo_write", parse_docstring=True)

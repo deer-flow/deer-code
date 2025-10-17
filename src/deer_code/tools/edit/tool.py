@@ -2,7 +2,7 @@ from pathlib import Path
 
 from langchain.tools import tool
 
-from deer_code.editors import TextEditor
+from .text_editor import TextEditor
 
 
 @tool("text_editor", parse_docstring=True)
