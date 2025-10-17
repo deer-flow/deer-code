@@ -7,8 +7,8 @@ from textual.binding import Binding
 from textual.containers import Vertical
 from textual.widgets import Footer, Header, Input, TabbedContent, TabPane
 
-from deer_code import project
 from deer_code.agents import coding_agent
+from deer_code.project import project
 
 from .components import ChatView, EditorTabs, TerminalView, TodoListView
 from .theme import DEER_DARK_THEME
@@ -145,7 +145,10 @@ class ConsoleApp(App):
         chat_input.focus()
 
     def _extract_code(self, text: str) -> str:
-        return re.search(r"```(.*)```", text, re.DOTALL).group(1)
+        match = re.search(r"```(.*)```", text, re.DOTALL)
+        if match:
+            return match.group(1)
+        return text
 
 
 app = ConsoleApp()

@@ -1,8 +1,8 @@
 from langgraph.prebuilt import create_react_agent
 
-from deer_code import project
 from deer_code.models import create_chat_model
-from deer_code.prompts.template import apply_prompt_template
+from deer_code.project import project
+from deer_code.prompts import apply_prompt_template
 from deer_code.tools import bash_tool, text_editor_tool, todo_write_tool
 
 
