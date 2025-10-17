@@ -5,7 +5,7 @@ from langchain_openai import ChatOpenAI
 from deer_code.config.config import get_config_section
 
 
-def create_chat_model():
+def init_chat_model():
     settings = get_config_section("chat_model")
     if not settings:
         raise ValueError("The `chat_model` section in `config.yaml` is not found")
@@ -25,5 +25,5 @@ def create_chat_model():
 
 
 if __name__ == "__main__":
-    chat_model = create_chat_model()
+    chat_model = init_chat_model()
     print(chat_model.invoke("What is the capital of France?"))
