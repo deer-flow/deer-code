@@ -103,5 +103,5 @@ class MessageItemView(Static):
             else:
                 return "Unknown command: " + command
         if name == "todo_write":
-            return "📌 Update TODO list"
+            return "📌 Update to-do list"
         return "Unknown Tool"
