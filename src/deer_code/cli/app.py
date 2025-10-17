@@ -16,7 +16,7 @@ from .theme import DEER_DARK_THEME
 
 
 class ConsoleApp(App):
-    TITLE = "🦌 DeerCode"
+    TITLE = "DeerCode"
 
     CSS = """
     Screen {
@@ -83,7 +83,7 @@ class ConsoleApp(App):
             with TabbedContent(id="bottom-right-tabs"):
                 with TabPane(id="terminal-tab", title="Terminal"):
                     yield TerminalView(id="terminal-view")
-                with TabPane(id="todo-tab", title="Todo"):
+                with TabPane(id="todo-tab", title="To-do"):
                     yield TodoListView(id="todo-list-view")
         yield Footer(id="footer")
 
