@@ -16,7 +16,27 @@ class ChatView(Vertical):
         background: $surface;
         padding: 0;
     }
+
+    ChatView.generating {
+        background: red;
+    }
     """
+
+    _is_generating = False
+
+    @property
+    def is_generating(self) -> bool:
+        return self._is_generating
+
+    @is_generating.setter
+    def is_generating(self, value: bool) -> None:
+        self._is_generating = value
+        if value:
+            self.add_class("generating")
+        else:
+            self.remove_class("generating")
+        message_list = self.query_one("#message-list", MessageListView)
+        message_list.is_generating = value
 
     def compose(self) -> ComposeResult:
         """Compose the chat interface"""

@@ -1,3 +1,4 @@
+import asyncio
 import re
 
 from langchain.schema import AIMessage, BaseMessage, HumanMessage
@@ -60,14 +61,18 @@ class ConsoleApp(App):
         Binding("ctrl+c", "quit", "Quit", show=False),
     ]
 
-    _is_busy = False
+    _is_generating = False
 
     @property
-    def is_busy(self) -> bool:
-        return self._is_busy
+    def is_generating(self) -> bool:
+        return self._is_generating
 
-    def set_busy(self, is_busy: bool) -> None:
-        self._is_busy = is_busy
+    @is_generating.setter
+    def is_generating(self, value: bool) -> None:
+        self._is_generating = value
+        chat_view = self.query_one("#chat-view", ChatView)
+        chat_view.is_generating = value
+        chat_view.disabled = value
 
     def compose(self) -> ComposeResult:
         yield Header(id="header")
@@ -88,9 +93,12 @@ class ConsoleApp(App):
         self.sub_title = project.root_dir
 
     async def on_input_submitted(self, event: Input.Submitted) -> None:
-        if not self.is_busy and event.input.id == "chat-input":
+        if not self.is_generating and event.input.id == "chat-input":
             user_input = event.value.strip()
             if user_input:
+                if user_input == "exit" or user_input == "quit":
+                    self.exit()
+                    return
                 event.input.value = ""
                 user_message = HumanMessage(content=user_input)
                 await self._handle_user_input(user_message)
@@ -102,13 +110,14 @@ class ConsoleApp(App):
         terminal_view = self.query_one("#terminal-view", TerminalView)
         todo_list_view = self.query_one("#todo-list-view", TodoListView)
         chat_view.add_message(user_message)
-        self.set_busy(True)
+        self._is_generating = True
         bash_tool_call_ids: list[str] = []
         async for chunk in coding_agent.astream(
             {"messages": [user_message]},
             stream_mode="updates",
             config={"recursion_limit": 100},
         ):
+            await asyncio.sleep(0.1)
             roles = chunk.keys()
             for role in roles:
                 messages: list[BaseMessage] = chunk[role].get("messages", [])
@@ -140,7 +149,7 @@ class ConsoleApp(App):
                                 muted=True,
                             )
                             bash_tool_call_ids.remove(message.tool_call_id)
-        self.set_busy(False)
+        self.is_generating = False
         chat_input = self.query_one("#chat-input", Input)
         chat_input.focus()
 
