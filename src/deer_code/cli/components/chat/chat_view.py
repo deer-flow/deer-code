@@ -16,10 +16,6 @@ class ChatView(Vertical):
         background: $surface;
         padding: 0;
     }
-
-    ChatView.generating {
-        background: red;
-    }
     """
 
     _is_generating = False
@@ -31,10 +27,6 @@ class ChatView(Vertical):
     @is_generating.setter
     def is_generating(self, value: bool) -> None:
         self._is_generating = value
-        if value:
-            self.add_class("generating")
-        else:
-            self.remove_class("generating")
         message_list = self.query_one("#message-list", MessageListView)
         message_list.is_generating = value
 
@@ -52,7 +44,6 @@ class ChatView(Vertical):
                 content="Hello! I'm DeerCode. I can help you write and execute code."
             )
         )
-        self.focus_input()
 
     def add_message(self, message: BaseMessage) -> None:
         """Add a message to the chat"""

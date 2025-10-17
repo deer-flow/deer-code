@@ -3,6 +3,7 @@ import re
 
 from langchain.schema import AIMessage, BaseMessage, HumanMessage
 from langchain.schema.messages import ToolMessage
+from textual import work
 from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.containers import Vertical
@@ -87,12 +88,17 @@ class ConsoleApp(App):
                     yield TodoListView(id="todo-list-view")
         yield Footer(id="footer")
 
+    def focus_input(self) -> None:
+        chat_view = self.query_one("#chat-view", ChatView)
+        chat_view.focus_input()
+
     def on_mount(self) -> None:
         self.register_theme(DEER_DARK_THEME)
         self.theme = "deer-dark"
         self.sub_title = project.root_dir
+        self.focus_input()
 
-    async def on_input_submitted(self, event: Input.Submitted) -> None:
+    def on_input_submitted(self, event: Input.Submitted) -> None:
         if not self.is_generating and event.input.id == "chat-input":
             user_input = event.value.strip()
             if user_input:
@@ -101,57 +107,73 @@ class ConsoleApp(App):
                     return
                 event.input.value = ""
                 user_message = HumanMessage(content=user_input)
-                await self._handle_user_input(user_message)
+                self._handle_user_input(user_message)
 
+    @work(exclusive=True, thread=False)
     async def _handle_user_input(self, user_message: HumanMessage) -> None:
-        chat_view = self.query_one("#chat-view", ChatView)
-        editor_tabs = self.query_one("#editor-tabs", EditorTabs)
-        bottom_right_tabs = self.query_one("#bottom-right-tabs", TabbedContent)
-        terminal_view = self.query_one("#terminal-view", TerminalView)
-        todo_list_view = self.query_one("#todo-list-view", TodoListView)
-        chat_view.add_message(user_message)
-        self._is_generating = True
-        bash_tool_call_ids: list[str] = []
+        self._process_outgoing_message(user_message)
+        self.is_generating = True
         async for chunk in coding_agent.astream(
             {"messages": [user_message]},
             stream_mode="updates",
             config={"recursion_limit": 100},
         ):
-            await asyncio.sleep(0.1)
             roles = chunk.keys()
             for role in roles:
                 messages: list[BaseMessage] = chunk[role].get("messages", [])
                 for message in messages:
-                    chat_view.add_message(message)
-                    if isinstance(message, AIMessage) and message.tool_calls:
-                        for tool_call in message.tool_calls:
-                            if tool_call["name"] == "bash":
-                                bash_tool_call_ids.append(tool_call["id"])
-                                terminal_view.write(f"$ {tool_call["args"]["command"]}")
-                                bottom_right_tabs.active = "terminal-tab"
-                            elif tool_call["name"] == "todo_write":
-                                bottom_right_tabs.active = "todo-tab"
-                                todo_list_view.update_items(tool_call["args"]["items"])
-                            elif tool_call["name"] == "text_editor":
-                                command = tool_call["args"]["command"]
-                                if command == "create":
-                                    editor_tabs.open_file(
-                                        tool_call["args"]["path"],
-                                        tool_call["args"]["file_text"],
-                                    )
-                                else:
-                                    editor_tabs.open_file(tool_call["args"]["path"])
-                    if isinstance(message, ToolMessage):
-                        if message.tool_call_id in bash_tool_call_ids:
-                            output = self._extract_code(message.content)
-                            terminal_view.write(
-                                output if output.strip() != "" else "\n(empty)\n",
-                                muted=True,
-                            )
-                            bash_tool_call_ids.remove(message.tool_call_id)
+                    self._process_incoming_message(message)
         self.is_generating = False
-        chat_input = self.query_one("#chat-input", Input)
-        chat_input.focus()
+        self.focus_input()
+
+    def _process_outgoing_message(self, message: HumanMessage) -> None:
+        chat_view = self.query_one("#chat-view", ChatView)
+        chat_view.add_message(message)
+
+    def _process_incoming_message(self, message: BaseMessage) -> None:
+        chat_view = self.query_one("#chat-view", ChatView)
+        chat_view.add_message(message)
+        if isinstance(message, AIMessage) and message.tool_calls:
+            self._process_tool_call_message(message)
+        if isinstance(message, ToolMessage):
+            self._process_tool_message(message)
+
+    _bash_tool_call_ids: list[str] = []
+
+    def _process_tool_call_message(self, message: AIMessage) -> None:
+        terminal_view = self.query_one("#terminal-view", TerminalView)
+        todo_list_view = self.query_one("#todo-list-view", TodoListView)
+        editor_tabs = self.query_one("#editor-tabs", EditorTabs)
+        bottom_right_tabs = self.query_one("#bottom-right-tabs", TabbedContent)
+        for tool_call in message.tool_calls:
+            tool_name = tool_call["name"]
+            tool_args = tool_call["args"]
+            if tool_name == "bash":
+                self._bash_tool_call_ids.append(tool_call["id"])
+                terminal_view.write(f"$ {tool_args["command"]}")
+                bottom_right_tabs.active = "terminal-tab"
+            elif tool_name == "todo_write":
+                bottom_right_tabs.active = "todo-tab"
+                todo_list_view.update_items(tool_args["items"])
+            elif tool_name == "text_editor":
+                command = tool_args["command"]
+                if command == "create":
+                    editor_tabs.open_file(
+                        tool_args["path"],
+                        tool_args["file_text"],
+                    )
+                else:
+                    editor_tabs.open_file(tool_args["path"])
+
+    def _process_tool_message(self, message: ToolMessage) -> None:
+        terminal_view = self.query_one("#terminal-view", TerminalView)
+        if message.tool_call_id in self._bash_tool_call_ids:
+            output = self._extract_code(message.content)
+            terminal_view.write(
+                output if output.strip() != "" else "\n(empty)\n",
+                muted=True,
+            )
+            self._bash_tool_call_ids.remove(message.tool_call_id)
 
     def _extract_code(self, text: str) -> str:
         match = re.search(r"```(.*)```", text, re.DOTALL)
