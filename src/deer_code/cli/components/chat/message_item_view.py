@@ -1,7 +1,7 @@
 from langchain.schema.messages import AIMessage, BaseMessage, HumanMessage, ToolMessage
 from langchain_core.messages import ToolCall
 from textual.app import ComposeResult
-from textual.widgets import Static
+from textual.widgets import Markdown, Static
 
 
 class MessageItemView(Static):
@@ -34,6 +34,11 @@ class MessageItemView(Static):
     MessageItemView .margin_top_1.tool_call {
         margin-top: 1;
     }
+
+    MessageItemView #markdown {
+        padding: 0 1 0 3;
+        margin: 0;
+    }
     """
 
     def __init__(self, message: BaseMessage, display_header: bool = True, **kwargs):
@@ -63,8 +68,9 @@ class MessageItemView(Static):
             and text_content is not None
             and text_content != ""
         ):
-            yield Static(
+            yield Markdown(
                 text_content,
+                id="markdown",
                 classes=f"message-content{' final' if final_action else ''}",
             )
         if isinstance(self.message, AIMessage):
