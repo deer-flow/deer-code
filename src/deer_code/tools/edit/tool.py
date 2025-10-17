@@ -43,14 +43,10 @@ def text_editor_tool(
         return f"Successfully inserted text at line {insert_line} in {path}."
     elif command == "create":
         if _path.exists():
-            raise ValueError(
-                f"File already exists at: {_path}. Cannot overwrite files using command `create`."
-            )
+            return f"Error: file already exists at: {_path}. Cannot overwrite files using command `create`."
         if _path.is_dir():
-            raise ValueError(
-                f"The path {_path} is a directory. Please provide a valid file path."
-            )
+            return f"Error: the path {_path} is a directory. Please provide a valid file path."
         editor.write_file(_path, file_text if file_text is not None else "")
         return f"File successfully created at {_path}."
     else:
-        raise ValueError(f"Invalid command: {command}")
+        return f"Error: invalid command: {command}"
