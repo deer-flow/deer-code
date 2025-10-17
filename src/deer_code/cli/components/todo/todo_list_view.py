@@ -17,6 +17,11 @@ class TodoListView(Static):
     def update_items(self, items: list[dict]):
         content = ""
         for item in items:
-            status = "\\[x]" if item["status"] == "completed" else "\\[ ]"
+            if item["status"] == "in_progress":
+                status = "\\[•]"
+            elif item["status"] == "completed":
+                status = "\\[x]"
+            else:
+                status = "\\[ ]"
             content += f"{status} {item["content"]}\n"
         self.update(content)
