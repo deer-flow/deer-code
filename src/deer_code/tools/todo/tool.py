@@ -1,4 +1,4 @@
-from langchain.agents import tool
+from langchain.tools import tool
 
 from .types import TodoItem
 

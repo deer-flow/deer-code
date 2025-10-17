@@ -1,4 +1,4 @@
-from langchain.schema import BaseMessage
+from langchain.messages import AnyMessage
 from textual.app import ComposeResult
 from textual.containers import Vertical, VerticalScroll
 
@@ -30,7 +30,7 @@ class MessageListView(VerticalScroll):
     }
     """
 
-    messages: list[BaseMessage] = []
+    messages: list[AnyMessage] = []
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -54,7 +54,7 @@ class MessageListView(VerticalScroll):
         yield Vertical(id="message-list")
         yield LoadingIndicator(id="loading")
 
-    def add_message(self, message: BaseMessage) -> None:
+    def add_message(self, message: AnyMessage) -> None:
         """Add a new message to the list"""
         display_header = True
         if len(self.messages) == 0:

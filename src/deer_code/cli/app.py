@@ -1,7 +1,6 @@
 import re
 
-from langchain.schema import AIMessage, BaseMessage, HumanMessage
-from langchain.schema.messages import ToolMessage
+from langchain.messages import AIMessage, AnyMessage, HumanMessage, ToolMessage
 from textual import work
 from textual.app import App, ComposeResult
 from textual.binding import Binding
@@ -121,7 +120,7 @@ class ConsoleApp(App):
         ):
             roles = chunk.keys()
             for role in roles:
-                messages: list[BaseMessage] = chunk[role].get("messages", [])
+                messages: list[AnyMessage] = chunk[role].get("messages", [])
                 for message in messages:
                     self._process_incoming_message(message)
         self.is_generating = False
@@ -131,7 +130,7 @@ class ConsoleApp(App):
         chat_view = self.query_one("#chat-view", ChatView)
         chat_view.add_message(message)
 
-    def _process_incoming_message(self, message: BaseMessage) -> None:
+    def _process_incoming_message(self, message: AnyMessage) -> None:
         chat_view = self.query_one("#chat-view", ChatView)
         chat_view.add_message(message)
         if isinstance(message, AIMessage) and message.tool_calls:
@@ -139,7 +138,8 @@ class ConsoleApp(App):
         if isinstance(message, ToolMessage):
             self._process_tool_message(message)
 
-    _bash_tool_call_ids: list[str] = []
+    _bash_tool_calls: list[str] = []
+    _mutable_text_editor_tool_calls: dict[str, str] = {}
 
     def _process_tool_call_message(self, message: AIMessage) -> None:
         terminal_view = self.query_one("#terminal-view", TerminalView)
@@ -150,7 +150,7 @@ class ConsoleApp(App):
             tool_name = tool_call["name"]
             tool_args = tool_call["args"]
             if tool_name == "bash":
-                self._bash_tool_call_ids.append(tool_call["id"])
+                self._bash_tool_calls.append(tool_call["id"])
                 terminal_view.write(f"$ {tool_args["command"]}")
                 bottom_right_tabs.active = "terminal-tab"
             elif tool_name == "todo_write":
@@ -165,16 +165,25 @@ class ConsoleApp(App):
                     )
                 else:
                     editor_tabs.open_file(tool_args["path"])
+                if command != "view":
+                    self._mutable_text_editor_tool_calls[tool_call["id"]] = tool_args[
+                        "path"
+                    ]
 
     def _process_tool_message(self, message: ToolMessage) -> None:
         terminal_view = self.query_one("#terminal-view", TerminalView)
-        if message.tool_call_id in self._bash_tool_call_ids:
+        if message.tool_call_id in self._bash_tool_calls:
             output = self._extract_code(message.content)
             terminal_view.write(
                 output if output.strip() != "" else "\n(empty)\n",
                 muted=True,
             )
-            self._bash_tool_call_ids.remove(message.tool_call_id)
+            self._bash_tool_calls.remove(message.tool_call_id)
+        elif self._mutable_text_editor_tool_calls.get(message.tool_call_id):
+            path = self._mutable_text_editor_tool_calls[message.tool_call_id]
+            del self._mutable_text_editor_tool_calls[message.tool_call_id]
+            editor_tabs = self.query_one("#editor-tabs", EditorTabs)
+            editor_tabs.open_file(path)
 
     def _extract_code(self, text: str) -> str:
         match = re.search(r"```(.*)```", text, re.DOTALL)

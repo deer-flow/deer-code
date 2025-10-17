@@ -1,5 +1,10 @@
-from langchain.schema.messages import AIMessage, BaseMessage, HumanMessage, ToolMessage
-from langchain_core.messages import ToolCall
+from langchain.messages import (
+    AIMessage,
+    AnyMessage,
+    HumanMessage,
+    ToolCall,
+    ToolMessage,
+)
 from textual.app import ComposeResult
 from textual.widgets import Markdown, Static
 
@@ -41,7 +46,7 @@ class MessageItemView(Static):
     }
     """
 
-    def __init__(self, message: BaseMessage, display_header: bool = True, **kwargs):
+    def __init__(self, message: AnyMessage, display_header: bool = True, **kwargs):
         super().__init__(**kwargs)
         self.message = message
         self.add_class(message.type)

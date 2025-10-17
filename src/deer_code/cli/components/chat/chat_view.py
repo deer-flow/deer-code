@@ -1,5 +1,4 @@
-from langchain.schema import AIMessage, BaseMessage
-from langchain.schema.messages import ToolMessage
+from langchain.messages import AIMessage, AnyMessage, ToolMessage
 from textual.app import ComposeResult
 from textual.containers import Vertical
 
@@ -45,7 +44,7 @@ class ChatView(Vertical):
             )
         )
 
-    def add_message(self, message: BaseMessage) -> None:
+    def add_message(self, message: AnyMessage) -> None:
         """Add a message to the chat"""
         message_list = self.query_one("#message-list", MessageListView)
         if not isinstance(message, ToolMessage):
