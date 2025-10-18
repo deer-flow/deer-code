@@ -138,7 +138,7 @@ class ConsoleApp(App):
         if isinstance(message, ToolMessage):
             self._process_tool_message(message)
 
-    _bash_tool_calls: list[str] = []
+    _terminal_tool_calls: list[str] = []
     _mutable_text_editor_tool_calls: dict[str, str] = {}
 
     def _process_tool_call_message(self, message: AIMessage) -> None:
@@ -150,9 +150,20 @@ class ConsoleApp(App):
             tool_name = tool_call["name"]
             tool_args = tool_call["args"]
             if tool_name == "bash":
-                self._bash_tool_calls.append(tool_call["id"])
+                self._terminal_tool_calls.append(tool_call["id"])
                 terminal_view.write(f"$ {tool_args["command"]}")
                 bottom_right_tabs.active = "terminal-tab"
+            if tool_name == "tree":
+                self._terminal_tool_calls.append(tool_call["id"])
+                terminal_view.write(
+                    f"$ tree {tool_args["path"]}{f" --max-depth={tool_args["max_depth"]}" if tool_args.get("max_depth") else ""}"
+                )
+            elif tool_name == "grep":
+                self._terminal_tool_calls.append(tool_call["id"])
+                terminal_view.write(f"$ grep {" ".join(tool_args.values())}")
+            elif tool_name == "ls":
+                self._terminal_tool_calls.append(tool_call["id"])
+                terminal_view.write(f"$ ls {" ".join(tool_args.values())}")
             elif tool_name == "todo_write":
                 bottom_right_tabs.active = "todo-tab"
                 todo_list_view.update_items(tool_args["items"])
@@ -172,13 +183,13 @@ class ConsoleApp(App):
 
     def _process_tool_message(self, message: ToolMessage) -> None:
         terminal_view = self.query_one("#terminal-view", TerminalView)
-        if message.tool_call_id in self._bash_tool_calls:
+        if message.tool_call_id in self._terminal_tool_calls:
             output = self._extract_code(message.content)
             terminal_view.write(
                 output if output.strip() != "" else "\n(empty)\n",
                 muted=True,
             )
-            self._bash_tool_calls.remove(message.tool_call_id)
+            self._terminal_tool_calls.remove(message.tool_call_id)
         elif self._mutable_text_editor_tool_calls.get(message.tool_call_id):
             path = self._mutable_text_editor_tool_calls[message.tool_call_id]
             del self._mutable_text_editor_tool_calls[message.tool_call_id]

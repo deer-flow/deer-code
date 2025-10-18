@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Optional
 
 from langchain.tools import tool
 
@@ -9,11 +10,11 @@ from .text_editor import TextEditor
 def text_editor_tool(
     command: str,
     path: str,
-    file_text: str | None = None,
-    view_range: list[int] | None = None,
-    old_str: str | None = None,
-    new_str: str | None = None,
-    insert_line: int | None = None,
+    file_text: Optional[str] = None,
+    view_range: Optional[list[int]] = None,
+    old_str: Optional[str] = None,
+    new_str: Optional[str] = None,
+    insert_line: Optional[int] = None,
 ):
     """
     A text editor tool supports view, create, str_replace, insert.

@@ -95,7 +95,23 @@ class MessageItemView(Static):
         name = tool_call["name"]
         if name == "bash":
             return "💻 Execute command: " + tool_call["args"]["command"]
-        if name == "text_editor":
+        elif name == "tree":
+            return "🔍 Explore project structure: " + tool_call["args"]["path"]
+        elif name == "grep":
+            return (
+                "🔍 Search files: "
+                + tool_call["args"]["pattern"]
+                + " in "
+                + tool_call["args"]["path"]
+            )
+        elif name == "ls":
+            return (
+                "🗂️ List files: "
+                + tool_call["args"]["path"]
+                + " with "
+                + tool_call["args"]["match"]
+            )
+        elif name == "text_editor":
             command = tool_call["args"]["command"]
             if command == "view":
                 return "👁️  View file: " + tool_call["args"]["path"]
@@ -107,6 +123,6 @@ class MessageItemView(Static):
                 return "✏️  Insert text into file: " + tool_call["args"]["path"]
             else:
                 return "Unknown command: " + command
-        if name == "todo_write":
+        elif name == "todo_write":
             return "📌 Update to-do list"
         return "Unknown Tool"

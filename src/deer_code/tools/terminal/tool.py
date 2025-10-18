@@ -1,3 +1,5 @@
+from typing import Optional
+
 from langchain.tools import tool
 
 from deer_code.project import project
@@ -8,7 +10,7 @@ keep_alive_terminal: BashTerminal | None = None
 
 
 @tool("bash", parse_docstring=True)
-def bash_tool(command: str, reset_cwd: bool = False):
+def bash_tool(command: str, reset_cwd: Optional[bool] = False):
     """Execute a standard bash command in a keep-alive shell, and return the output if successful or error message if failed.
 
     Args:
