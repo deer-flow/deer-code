@@ -96,13 +96,22 @@ class MessageItemView(Static):
         if name == "bash":
             return "💻 Execute command: " + tool_call["args"]["command"]
         elif name == "tree":
-            return "🔍 Explore project structure: " + tool_call["args"]["path"]
+            return "🔍 Explore project structure: " + (
+                tool_call["args"]["path"]
+                if tool_call["args"].get("path")
+                else "."
+                + (
+                    " --max-depth=" + tool_call["args"]["max_depth"]
+                    if tool_call["args"].get("max_depth")
+                    else ""
+                )
+            )
         elif name == "grep":
             return (
                 "🔍 Search files: "
                 + tool_call["args"]["pattern"]
                 + " in "
-                + tool_call["args"]["path"]
+                + (tool_call["args"]["path"] if tool_call["args"].get("path") else ".")
             )
         elif name == "ls":
             return (
