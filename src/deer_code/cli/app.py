@@ -116,7 +116,7 @@ class ConsoleApp(App):
         async for chunk in coding_agent.astream(
             {"messages": [user_message]},
             stream_mode="updates",
-            config={"recursion_limit": 100},
+            config={"recursion_limit": 100, "thread_id": "thread_1"},
         ):
             roles = chunk.keys()
             for role in roles:

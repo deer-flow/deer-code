@@ -1,4 +1,5 @@
 from langchain.agents import create_agent
+from langgraph.checkpoint.memory import MemorySaver
 
 from deer_code.models import init_chat_model
 from deer_code.project import project
@@ -13,7 +14,7 @@ from deer_code.tools import (
 )
 
 
-def create_coding_agent():
+def create_coding_agent(**kwargs):
     return create_agent(
         model=init_chat_model(),
         tools=[
@@ -28,7 +29,9 @@ def create_coding_agent():
             "coding_agent", PROJECT_ROOT=project.root_dir
         ),
         name="coding_agent",
+        **kwargs,
     )
 
 
-coding_agent = create_coding_agent()
+memory = MemorySaver()
+coding_agent = create_coding_agent(checkpointer=memory)
