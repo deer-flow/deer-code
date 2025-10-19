@@ -21,7 +21,7 @@ def text_editor_tool(
 
     Args:
         command: One of "view", "create", "str_replace", "insert".
-        path: The absolute path to the file. Only absolute paths are supported.
+        path: The absolute path to the file. Only absolute paths are supported. Automatically create the directories if it doesn't exist.
         file_text: Only applies for the "create" command. The text to write to the file.
         view_range:
             Only applies for the "view" command.
