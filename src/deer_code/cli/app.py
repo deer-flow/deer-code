@@ -1,3 +1,4 @@
+import asyncio
 import re
 
 from langchain.messages import AIMessage, AnyMessage, HumanMessage, ToolMessage
@@ -64,9 +65,13 @@ class ConsoleApp(App):
         Binding("ctrl+c", "quit", "Quit", show=False),
     ]
 
-    _coding_agent: CompiledStateGraph | None = None
+    _coding_agent: CompiledStateGraph
 
     _is_generating = False
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._coding_agent = create_coding_agent()
 
     @property
     def is_generating(self) -> bool:
@@ -96,7 +101,7 @@ class ConsoleApp(App):
         chat_view = self.query_one("#chat-view", ChatView)
         chat_view.focus_input()
 
-    async def on_mount(self) -> None:
+    def on_mount(self) -> None:
         self.register_theme(DEER_DARK_THEME)
         self.theme = "deer-dark"
         self.sub_title = project.root_dir
@@ -104,14 +109,7 @@ class ConsoleApp(App):
         editor_tabs = self.query_one("#editor-tabs", EditorTabs)
         editor_tabs.open_welcome()
 
-        try:
-            mcp_tools = await load_mcp_tools()
-        except Exception as e:
-            # Fatal error
-            print(f"Error loading MCP tools: {e}")
-            self.exit(1)
-            return
-        self._coding_agent = create_coding_agent(additional_tools=mcp_tools)
+        asyncio.create_task(self._init_agent())
 
     def on_input_submitted(self, event: Input.Submitted) -> None:
         if not self.is_generating and event.input.id == "chat-input":
@@ -123,6 +121,26 @@ class ConsoleApp(App):
                 event.input.value = ""
                 user_message = HumanMessage(content=user_input)
                 self._handle_user_input(user_message)
+
+    async def _init_agent(self) -> None:
+        terminal_view = self.query_one("#terminal-view", TerminalView)
+        terminal_view.write("$ Loading MCP tools...")
+        try:
+            mcp_tools = await load_mcp_tools()
+            tool_count = len(mcp_tools)
+            if tool_count > 0:
+                terminal_view.write(
+                    f"- {tool_count} tool{' is ' if tool_count == 1 else 's are'} loaded.\n",
+                    True,
+                )
+            else:
+                terminal_view.write("No tools found.\n", True)
+        except Exception as e:
+            # Fatal error
+            print(f"Error loading MCP tools: {e}")
+            self.exit(1)
+            return
+        self._coding_agent = create_coding_agent(additional_tools=mcp_tools)
 
     @work(exclusive=True, thread=False)
     async def _handle_user_input(self, user_message: HumanMessage) -> None:

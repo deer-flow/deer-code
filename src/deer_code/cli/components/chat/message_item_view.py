@@ -1,3 +1,5 @@
+import json
+
 from langchain.messages import (
     AIMessage,
     AnyMessage,
@@ -134,4 +136,4 @@ class MessageItemView(Static):
                 return "Unknown command: " + command
         elif name == "todo_write":
             return "📌 Update to-do list"
-        return "Unknown Tool"
+        return f"🛠️  Use MCP tool: {name}({json.dumps(tool_call['args'])})"

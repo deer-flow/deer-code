@@ -22,9 +22,6 @@ class TerminalView(VerticalScroll):
         super().__init__(**kwargs)
         self.terminal_output = []
 
-    def on_mount(self) -> None:
-        self.write("$ DeerCode\n", muted=True)
-
     def write(self, text: str, muted: bool = False) -> None:
         """Add output to terminal"""
         self.terminal_output.append(text)

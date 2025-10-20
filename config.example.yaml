@@ -19,4 +19,4 @@ tools:
   mcp_servers:
     context7:
       transport: 'streamable_http'
-      url: 'https://context7.com/mcp'
+      url: 'https://mcp.context7.com/mcp'
