@@ -1,20 +1,24 @@
 import re
 
 from langchain.messages import AIMessage, AnyMessage, HumanMessage, ToolMessage
+from langgraph.graph.state import CompiledStateGraph
 from textual import work
 from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.containers import Vertical
 from textual.widgets import Footer, Header, Input, TabbedContent, TabPane
 
-from deer_code.agents import coding_agent
+from deer_code.agents import create_coding_agent
 from deer_code.project import project
+from deer_code.tools import load_mcp_tools
 
 from .components import ChatView, EditorTabs, TerminalView, TodoListView
 from .theme import DEER_DARK_THEME
 
 
 class ConsoleApp(App):
+    """The main application for DeerCode."""
+
     TITLE = "DeerCode"
 
     CSS = """
@@ -60,6 +64,8 @@ class ConsoleApp(App):
         Binding("ctrl+c", "quit", "Quit", show=False),
     ]
 
+    _coding_agent: CompiledStateGraph | None = None
+
     _is_generating = False
 
     @property
@@ -90,13 +96,22 @@ class ConsoleApp(App):
         chat_view = self.query_one("#chat-view", ChatView)
         chat_view.focus_input()
 
-    def on_mount(self) -> None:
+    async def on_mount(self) -> None:
         self.register_theme(DEER_DARK_THEME)
         self.theme = "deer-dark"
         self.sub_title = project.root_dir
         self.focus_input()
         editor_tabs = self.query_one("#editor-tabs", EditorTabs)
         editor_tabs.open_welcome()
+
+        try:
+            mcp_tools = await load_mcp_tools()
+        except Exception as e:
+            # Fatal error
+            print(f"Error loading MCP tools: {e}")
+            self.exit(1)
+            return
+        self._coding_agent = create_coding_agent(additional_tools=mcp_tools)
 
     def on_input_submitted(self, event: Input.Submitted) -> None:
         if not self.is_generating and event.input.id == "chat-input":
@@ -113,7 +128,7 @@ class ConsoleApp(App):
     async def _handle_user_input(self, user_message: HumanMessage) -> None:
         self._process_outgoing_message(user_message)
         self.is_generating = True
-        async for chunk in coding_agent.astream(
+        async for chunk in self._coding_agent.astream(
             {"messages": [user_message]},
             stream_mode="updates",
             config={"recursion_limit": 100, "thread_id": "thread_1"},

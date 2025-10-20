@@ -14,3 +14,9 @@ models:
     max_tokens: 8192
     extra_body:
       reasoning_effort: 'minimal'
+
+tools:
+  mcp_servers:
+    context7:
+      transport: 'streamable_http'
+      url: 'https://context7.com/mcp'

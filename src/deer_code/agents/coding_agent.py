@@ -1,4 +1,5 @@
 from langchain.agents import create_agent
+from langchain.tools import BaseTool
 from langgraph.checkpoint.memory import InMemorySaver
 
 from deer_code.models import init_chat_model
@@ -14,7 +15,16 @@ from deer_code.tools import (
 )
 
 
-def create_coding_agent(**kwargs):
+def create_coding_agent(additional_tools: list[BaseTool] = [], **kwargs):
+    """Create a coding agent.
+
+    Args:
+        additional_tools: Additional tools to add to the agent.
+        **kwargs: Additional keyword arguments to pass to the agent.
+
+    Returns:
+        The coding agent.
+    """
     return create_agent(
         model=init_chat_model(),
         tools=[
@@ -24,6 +34,7 @@ def create_coding_agent(**kwargs):
             text_editor_tool,
             todo_write_tool,
             tree_tool,
+            *additional_tools,
         ],
         system_prompt=apply_prompt_template(
             "coding_agent", PROJECT_ROOT=project.root_dir

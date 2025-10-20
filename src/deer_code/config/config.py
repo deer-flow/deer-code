@@ -15,7 +15,7 @@ def load_config() -> dict:
     return __config
 
 
-def get_config_section(key: str | list[str]) -> dict:
+def get_config_section(key: str | list[str]) -> dict | None:
     path = []
     if isinstance(key, str):
         path.append(key)
@@ -24,8 +24,8 @@ def get_config_section(key: str | list[str]) -> dict:
     global __config
     section = __config
     for key in path:
-        if key not in section:
-            raise ValueError(f"The `{key}` section in `config.yaml` is not found")
+        if section is None or key not in section:
+            return None
         section = section[key]
     return section
 
