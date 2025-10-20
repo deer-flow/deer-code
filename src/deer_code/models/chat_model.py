@@ -6,10 +6,7 @@ from deer_code.config.config import get_config_section
 
 
 def init_chat_model():
-    models_section = get_config_section("models")
-    if not models_section:
-        raise ValueError("The `models` section in `config.yaml` is not found")
-    settings = models_section.get("chat_model")
+    settings = get_config_section(["models", "chat_model"])
     if not settings:
         raise ValueError(
             "The `models/chat_model` section in `config.yaml` is not found"
