@@ -5,11 +5,12 @@
 # You can also use environment variables to fill in the values.
 # For example, if you want to use the OPENAI_API_KEY environment variable, you can use $OPENAI_API_KEY in the config.yaml file.
 
-chat_model:
-  model: 'gpt-5-2025-08-07'
-  base_url: 'https://api.openai.com/v1'
-  api_key: $OPENAI_API_KEY
-  temperature: 0
-  max_tokens: 8192
-  extra_body:
-    reasoning_effort: 'minimal'
+models:
+  chat_model:
+    model: 'gpt-5-2025-08-07'
+    base_url: 'https://api.openai.com/v1'
+    api_key: $OPENAI_API_KEY
+    temperature: 0
+    max_tokens: 8192
+    extra_body:
+      reasoning_effort: 'minimal'
