@@ -13,6 +13,17 @@ keep_alive_terminal: BashTerminal | None = None
 def bash_tool(command: str, reset_cwd: Optional[bool] = False):
     """Execute a standard bash command in a keep-alive shell, and return the output if successful or error message if failed.
 
+    Use this tool to perform:
+    - Create directories
+    - Install dependencies
+    - Start development server
+    - Run tests and linting
+    - Git operations
+
+    Never use this tool to perform any harmful or dangerous operations.
+
+    Use `ls`, `grep` and `tree` tools for file system operations instead of this tool.
+
     Args:
         command: The command to execute.
         reset_cwd: Whether to reset the current working directory to the project root directory.
