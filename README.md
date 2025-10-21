@@ -2,6 +2,8 @@
 
 A minimalist yet powerful AI coding agent that helps developers learn and build intelligent coding assistants. Built with Python and featuring a VSCode-like TUI interface, deer-code demonstrates how to create AI agents that can reason, plan, and act on code.
 
+<img width="2764" height="1988" alt="Screenshot" src="https://github.com/user-attachments/assets/3a86b15f-d616-4b56-80c9-63fccb4d8f28" />
+
 **Brought to you by** [🦌 The DeerFlow Team](https://github.com/bytedance/deer-flow).
 
 *Inspired by Anthropic's Claude Code.*
