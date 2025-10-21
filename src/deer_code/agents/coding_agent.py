@@ -15,11 +15,11 @@ from deer_code.tools import (
 )
 
 
-def create_coding_agent(additional_tools: list[BaseTool] = [], **kwargs):
+def create_coding_agent(plugin_tools: list[BaseTool] = [], **kwargs):
     """Create a coding agent.
 
     Args:
-        additional_tools: Additional tools to add to the agent.
+        plugin_tools: Additional tools to add to the agent.
         **kwargs: Additional keyword arguments to pass to the agent.
 
     Returns:
@@ -34,7 +34,7 @@ def create_coding_agent(additional_tools: list[BaseTool] = [], **kwargs):
             text_editor_tool,
             todo_write_tool,
             tree_tool,
-            *additional_tools,
+            *plugin_tools,
         ],
         system_prompt=apply_prompt_template(
             "coding_agent", PROJECT_ROOT=project.root_dir

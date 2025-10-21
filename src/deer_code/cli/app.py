@@ -140,7 +140,7 @@ class ConsoleApp(App):
             print(f"Error loading MCP tools: {e}")
             self.exit(1)
             return
-        self._coding_agent = create_coding_agent(additional_tools=mcp_tools)
+        self._coding_agent = create_coding_agent(plugin_tools=mcp_tools)
 
     @work(exclusive=True, thread=False)
     async def _handle_user_input(self, user_message: HumanMessage) -> None:
