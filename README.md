@@ -20,7 +20,16 @@ Brought you by [🦌 The DeerFlow Team](https://github.com/bytedance/deer-flow).
 make install
 ```
 
-## How to run in LangGraph CLI
+### How to run
+
+```bash
+uv run -m deer_code.main
+```
+
+> Change the `root_dir` located in [project.py](./src/deer_code/project.py)
+> when debugging.
+
+## How to debug in LangGraph CLI
 
 ```bash
 make dev
