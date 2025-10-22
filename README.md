@@ -86,6 +86,8 @@ Then, run the following command:
 make dev
 ```
 
+Now, open the browser and navigate to `https://agentchat.vercel.app/?apiUrl=http://localhost:2024&assistantId=coding_agent` to chat with the agent.
+
 ## 🌟 Features
 
 - [x] **Beginner-friendly**: Simple project structure designed for learning
