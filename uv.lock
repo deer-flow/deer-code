@@ -145,9 +145,9 @@ dependencies = [
 requires-dist = [
     { name = "httpx", extras = ["socks"], specifier = ">=0.28.1" },
     { name = "jinja2", specifier = ">=3.1.6" },
-    { name = "langchain", extras = ["openai"], specifier = ">=1.0.0rc2" },
+    { name = "langchain", extras = ["openai"], specifier = ">=1.0.1" },
     { name = "langchain-mcp-adapters", specifier = ">=0.1.11" },
-    { name = "langgraph", specifier = ">=1.0.0rc1" },
+    { name = "langgraph", specifier = ">=1.0.1" },
     { name = "pexpect", specifier = ">=4.9.0" },
     { name = "pydantic", specifier = ">=2.12.2" },
     { name = "rich", specifier = ">=14.2.0" },
