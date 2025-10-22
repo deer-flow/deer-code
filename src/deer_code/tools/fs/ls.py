@@ -46,7 +46,7 @@ def ls_tool(
                     break
         items = filtered_items
 
-    ignore = ignore + DEFAULT_IGNORE_PATTERNS
+    ignore = (ignore or []) + DEFAULT_IGNORE_PATTERNS
     filtered_items = []
     for item in items:
         should_ignore = False
