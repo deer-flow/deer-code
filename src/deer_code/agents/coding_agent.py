@@ -1,6 +1,8 @@
+import os
+
 from langchain.agents import create_agent
 from langchain.tools import BaseTool
-from langgraph.checkpoint.memory import InMemorySaver
+from langgraph.checkpoint.base import RunnableConfig
 
 from deer_code.models import init_chat_model
 from deer_code.project import project
@@ -44,5 +46,6 @@ def create_coding_agent(plugin_tools: list[BaseTool] = [], **kwargs):
     )
 
 
-memory = InMemorySaver()
-coding_agent = create_coding_agent(checkpointer=memory)
+def create_coding_agent_for_debug(config: RunnableConfig):
+    project.root_dir = os.getenv("PROJECT_ROOT", os.getcwd())
+    return create_coding_agent(debug=True)

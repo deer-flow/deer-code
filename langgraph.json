@@ -1,8 +1,10 @@
 {
   "$schema": "https://langgra.ph/schema.json",
   "dependencies": ["."],
-  "env": "./.env",
+  "env": {
+    "PROJECT_ROOT": "/path/to/your/developing/project"
+  },
   "graphs": {
-    "coding_agent": "deer_code.agents.coding_agent:coding_agent"
+    "coding_agent": "deer_code.agents.coding_agent:create_coding_agent_for_debug"
   }
 }
