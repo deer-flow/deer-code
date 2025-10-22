@@ -100,7 +100,7 @@ Now, open the browser and navigate to `https://agentchat.vercel.app/?apiUrl=http
 - [x] **Code Search**: Intelligent code location and search
 - [x] **Bash Execution**: Bash command execution
 - [x] **MCP Integration**: Bring your own MCP tools to enhance the agent's capabilities
-- [ ] **Working Memory**: Persistent memory across sessions (coming soon)
+- [ ] **Working Memory**: Coming soon
 
 ## 🤝 Contributing
 
