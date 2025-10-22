@@ -78,6 +78,10 @@ uv run -m deer_code.main "/path/to/your/developing/project"
 ```
 
 **Development mode (with LangGraph CLI):**
+
+First, change `env.PROJECT_ROOT` in `langgraph.json` file.
+
+Then, run the following command:
 ```bash
 make dev
 ```
