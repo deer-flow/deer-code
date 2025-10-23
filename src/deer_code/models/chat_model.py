@@ -1,6 +1,6 @@
 import os
 
-from langchain_openai import ChatOpenAI
+from langchain_deepseek import ChatDeepSeek
 
 from deer_code.config.config import get_config_section
 
@@ -22,7 +22,7 @@ def init_chat_model():
     rest_settings = settings.copy()
     del rest_settings["model"]
     del rest_settings["api_key"]
-    model = ChatOpenAI(model=model, api_key=api_key, **rest_settings)
+    model = ChatDeepSeek(model=model, api_key=api_key, **rest_settings)
     return model
 
 

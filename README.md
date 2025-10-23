@@ -44,7 +44,7 @@ DeerCode is written in Python and designed to be easy to set up and use. Follow 
 models:
   chat_model:
     model: 'gpt-5-2025-08-07'
-    base_url: 'https://api.openai.com/v1'
+    api_base: 'https://api.openai.com/v1'
     api_key: $OPENAI_API_KEY
     temperature: 0
     max_tokens: 8192
@@ -54,13 +54,13 @@ models:
   #
   # chat_model:
   #   model: 'doubao-seed-1-6-250615'
-  #   base_url: 'https://ark.cn-beijing.volces.com/api/v3'
+  #   api_base: 'https://ark.cn-beijing.volces.com/api/v3'
   #   api_key: $ARK_API_KEY
   #   temperature: 0
   #   max_tokens: 8192
   #   extra_body:
   #     thinking:
-  #       type: disabled # `disabled` or `auto`
+  #       type: auto
 tools:
   mcp_servers:
     context7:
@@ -100,7 +100,6 @@ Now, open the browser and navigate to `https://agentchat.vercel.app/?apiUrl=http
 - [x] **Code Search**: Intelligent code location and search
 - [x] **Bash Execution**: Bash command execution
 - [x] **MCP Integration**: Bring your own MCP tools to enhance the agent's capabilities
-- [ ] **Working Memory**: Coming soon
 
 ## 🤝 Contributing
 

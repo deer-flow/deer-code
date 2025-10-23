@@ -133,6 +133,7 @@ dependencies = [
     { name = "httpx", extra = ["socks"] },
     { name = "jinja2" },
     { name = "langchain", extra = ["openai"] },
+    { name = "langchain-deepseek" },
     { name = "langchain-mcp-adapters" },
     { name = "langgraph" },
     { name = "pexpect" },
@@ -146,6 +147,7 @@ requires-dist = [
     { name = "httpx", extras = ["socks"], specifier = ">=0.28.1" },
     { name = "jinja2", specifier = ">=3.1.6" },
     { name = "langchain", extras = ["openai"], specifier = ">=1.0.1" },
+    { name = "langchain-deepseek", specifier = ">=1.0.0" },
     { name = "langchain-mcp-adapters", specifier = ">=0.1.11" },
     { name = "langgraph", specifier = ">=1.0.1" },
     { name = "pexpect", specifier = ">=4.9.0" },
@@ -386,6 +388,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/ad/d0/9db6d375ecf8bd498fcc87016e43c3d930ddbfbacf9a1e99018ada4e824f/langchain_core-1.0.0.tar.gz", hash = "sha256:8e81c94a22fa3a362a0f101bbd1271bf3725e50cf1e31c84e8f4a1c731279785", size = 764484, upload-time = "2025-10-17T13:48:24.408Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/68/6a/8dd566cb7379d6e3a921f94713babba2f71cbed65c73c784c649c1fd7d4e/langchain_core-1.0.0-py3-none-any.whl", hash = "sha256:a94561bf75dd097c7d6e3864950f28dadc963f0bd810114de4095f41f634059b", size = 467157, upload-time = "2025-10-17T13:48:23.138Z" },
+]
+
+[[package]]
+name = "langchain-deepseek"
+version = "1.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "langchain-core" },
+    { name = "langchain-openai" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/1d/0e/a4c7e3782a07e40cdfa22439805764b16b76250eaf84ddb58fefc9570329/langchain_deepseek-1.0.0.tar.gz", hash = "sha256:8d09bbf42240a918589981e46e5168358aecdf30cc2fbcf6d1888c2bbe0fb62a", size = 146189, upload-time = "2025-10-17T15:56:49.739Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/4f/35/c84672001fd9899f8e40f99f81c81235d2093386ce3d159111002edd8365/langchain_deepseek-1.0.0-py3-none-any.whl", hash = "sha256:6c1e2a8350dbbd94445cf5998c8b9c6f0cba320a144d6a764fbfbef3032b2a09", size = 7604, upload-time = "2025-10-17T15:56:49.011Z" },
 ]
 
 [[package]]
