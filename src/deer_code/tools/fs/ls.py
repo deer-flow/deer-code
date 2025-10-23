@@ -2,14 +2,19 @@ import fnmatch
 from pathlib import Path
 from typing import Optional
 
-from langchain.tools import tool
+from langchain.tools import ToolRuntime, tool
+
+from deer_code.tools.reminders import generate_reminders
 
 from .ignore import DEFAULT_IGNORE_PATTERNS
 
 
 @tool("ls", parse_docstring=True)
 def ls_tool(
-    path: str, match: Optional[list[str]] = None, ignore: Optional[list[str]] = None
+    runtime: ToolRuntime,
+    path: str,
+    match: Optional[list[str]] = None,
+    ignore: Optional[list[str]] = None,
 ):
     """Lists files and directories in a given path. Optionally provide an array of glob patterns to match and ignore.
 
@@ -58,9 +63,11 @@ def ls_tool(
             filtered_items.append(item)
     items = filtered_items
 
+    reminders = generate_reminders(runtime)
+
     # Format the output
     if not items:
-        return f"No items found in {path}."
+        return f"No items found in {path}.{reminders}"
 
     result_lines = []
     for item in items:
@@ -69,7 +76,11 @@ def ls_tool(
         else:
             result_lines.append(item.name)
 
-    return f"Here's the result in {path}: \n```\n" + "\n".join(result_lines) + "\n```"
+    return (
+        f"Here's the result in {path}: \n```\n"
+        + "\n".join(result_lines)
+        + f"\n```{reminders}"
+    )
 
 
 if __name__ == "__main__":

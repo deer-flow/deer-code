@@ -1,8 +1,9 @@
 from typing import Optional
 
-from langchain.tools import tool
+from langchain.tools import ToolRuntime, tool
 
 from deer_code.project import project
+from deer_code.tools.reminders import generate_reminders
 
 from .bash_terminal import BashTerminal
 
@@ -10,7 +11,7 @@ keep_alive_terminal: BashTerminal | None = None
 
 
 @tool("bash", parse_docstring=True)
-def bash_tool(command: str, reset_cwd: Optional[bool] = False):
+def bash_tool(runtime: ToolRuntime, command: str, reset_cwd: Optional[bool] = False):
     """Execute a standard bash command in a keep-alive shell, and return the output if successful or error message if failed.
 
     Use this tool to perform:
@@ -22,7 +23,8 @@ def bash_tool(command: str, reset_cwd: Optional[bool] = False):
 
     Never use this tool to perform any harmful or dangerous operations.
 
-    Use `ls`, `grep` and `tree` tools for file system operations instead of this tool.
+    - Use `ls`, `grep` and `tree` tools for file system operations instead of this tool.
+    - Use `text_editor` tool with `create` command to create new files.
 
     Args:
         command: The command to execute.
@@ -34,4 +36,5 @@ def bash_tool(command: str, reset_cwd: Optional[bool] = False):
     elif reset_cwd:
         keep_alive_terminal.close()
         keep_alive_terminal = BashTerminal(project.root_dir)
-    return f"```\n{keep_alive_terminal.execute(command)}\n```"
+    reminders = generate_reminders(runtime)
+    return f"```\n{keep_alive_terminal.execute(command)}\n```{reminders}"

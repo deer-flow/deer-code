@@ -94,7 +94,7 @@ class TextEditor:
 
         Args:
             path: The path to the file.
-            old_str: The string to be replaced.
+            old_str: The string to be replaced. The edit will FAIL if `old_str` is not unique in the file. Provide a larger string with more surrounding context to make it unique.
             new_str: The replacement string. If None, old_str will be removed.
 
         Returns:
@@ -114,7 +114,7 @@ class TextEditor:
 
         # Check if old_str exists in the file
         if old_str not in file_content:
-            raise ValueError(f"String '{old_str}' not found in file: {path}")
+            raise ValueError(f"String not found in file: {path}")
 
         # Perform the replacement
         if new_str is None:

@@ -16,6 +16,8 @@ from deer_code.tools import (
     tree_tool,
 )
 
+from .state import CodingAgentState
+
 
 def create_coding_agent(plugin_tools: list[BaseTool] = [], **kwargs):
     """Create a coding agent.
@@ -41,6 +43,7 @@ def create_coding_agent(plugin_tools: list[BaseTool] = [], **kwargs):
         system_prompt=apply_prompt_template(
             "coding_agent", PROJECT_ROOT=project.root_dir
         ),
+        state_schema=CodingAgentState,
         name="coding_agent",
         **kwargs,
     )

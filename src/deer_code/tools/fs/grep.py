@@ -1,13 +1,16 @@
 import subprocess
 from typing import Literal, Optional
 
-from langchain.tools import tool
+from langchain.tools import ToolRuntime, tool
+
+from deer_code.tools.reminders import generate_reminders
 
 from .ignore import DEFAULT_IGNORE_PATTERNS
 
 
 @tool("grep", parse_docstring=True)
 def grep_tool(
+    runtime: ToolRuntime,
     pattern: str,
     path: Optional[str] = None,
     glob: Optional[str] = None,
@@ -120,10 +123,13 @@ def grep_tool(
             output = "\n".join(lines[:head_limit])
 
         # Format the result
+        reminders = generate_reminders(runtime)
         if output:
-            return f"Here's the result in {search_path}:\n\n```\n{output}\n```"
+            return (
+                f"Here's the result in {search_path}:\n\n```\n{output}\n```{reminders}"
+            )
         else:
-            return "No matches found."
+            return f"No matches found.{reminders}"
 
     except Exception as e:
         return f"Error: {str(e)}"
