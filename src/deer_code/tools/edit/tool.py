@@ -38,11 +38,11 @@ def text_editor_tool(
         new_str: Only applies for the "str_replace" and "insert" commands. The new text to insert in place of the old text.
         insert_line: Only applies for the "insert" command. The line number after which to insert the text (0 for beginning of file).
     """
-    editor = TextEditor()
     _path = Path(path)
-    editor.validate_path(command, _path)
     reminders = generate_reminders(runtime)
     try:
+        editor = TextEditor()
+        editor.validate_path(command, _path)
         if command == "view":
             return f"Here's the result of running `cat -n` on {_path}:\n\n```\n{editor.view(_path, view_range)}\n```{reminders}"
         elif command == "str_replace" and old_str is not None and new_str is not None:
