@@ -2,7 +2,7 @@
   "$schema": "https://langgra.ph/schema.json",
   "dependencies": ["."],
   "env": {
-    "PROJECT_ROOT": "/Users/henry/Desktop/next-js-demo"
+    "PROJECT_ROOT": "/your/project/path"
   },
   "graphs": {
     "coding_agent": "deer_code.agents.coding_agent:create_coding_agent_for_debug"
