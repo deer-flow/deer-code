@@ -17,7 +17,7 @@ def generate_reminders(runtime: ToolRuntime):
     reminders = []
     if len(unfinished_todos) > 0:
         reminders.append(
-            f"- {len(unfinished_todos)} todo{'' if len(unfinished_todos) == 1 else 's'} are not completed. Before you present the final result to the user, **make sure** all the todos are completed."
+            f"- {len(unfinished_todos)} todo{' is' if len(unfinished_todos) == 1 else 's are'} not completed. Before you present the final result to the user, **make sure** all the todos are completed."
         )
         reminders.append(
             "- Immediately update the TODO list using the `todo_write` tool."
