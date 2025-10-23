@@ -26,7 +26,8 @@ def todo_write_tool(
     message = f"Successfully updated the TODO list with {len(todos)} items."
     if len(unfinished_todos) > 0:
         message += f" {len(unfinished_todos)} todo{' is' if len(unfinished_todos) == 1 else 's are'} not completed."
-    message += " All todos are completed."
+    else:
+        message += " All todos are completed."
 
     return Command(
         update={
