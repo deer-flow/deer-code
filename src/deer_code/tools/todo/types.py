@@ -22,6 +22,6 @@ class TodoItem(BaseModel):
     """Representation of a TODO item."""
 
     id: int = Field(..., ge=0)
-    content: str = Field(..., min_length=1)
+    title: str = Field(..., min_length=1)
     priority: TodoPriority = Field(default=TodoPriority.medium)
     status: TodoStatus = Field(default=TodoStatus.pending)
