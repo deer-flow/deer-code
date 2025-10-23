@@ -23,7 +23,7 @@ def text_editor_tool(
     A text editor tool supports view, create, str_replace, insert.
 
     - `view` again when you fail to perform `str_replace` or `insert`.
-    - Do NOT use `create` to overwrite or modify existing files.
+    - `create` can also be used to overwrite an existing file.
     - `str_replace` can also be used to delete text in the file.
 
     Args:
@@ -52,8 +52,6 @@ def text_editor_tool(
             editor.insert(_path, insert_line, new_str)
             return f"Successfully inserted text at line {insert_line} in {path}.{reminders}"
         elif command == "create":
-            if _path.exists():
-                return f"Error: file already exists at: {_path}. Cannot overwrite files using command `create`.{reminders}"
             if _path.is_dir():
                 return f"Error: the path {_path} is a directory. Please provide a valid file path.{reminders}"
             editor.write_file(_path, file_text if file_text is not None else "")
