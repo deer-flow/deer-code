@@ -119,8 +119,11 @@ class MessageItemView(Static):
             return (
                 "🗂️ List files: "
                 + tool_call["args"]["path"]
-                + " with "
-                + tool_call["args"]["match"]
+                + (
+                    " with " + tool_call["args"]["match"]
+                    if tool_call["args"].get("match")
+                    else ""
+                )
             )
         elif name == "text_editor":
             command = tool_call["args"]["command"]
