@@ -53,6 +53,7 @@ models:
   # Alternatively, uncomment the following section to use Doubao's model:
   #
   # chat_model:
+  #   type: doubao
   #   model: 'doubao-seed-1-6-250615'
   #   api_base: 'https://ark.cn-beijing.volces.com/api/v3'
   #   api_key: $ARK_API_KEY

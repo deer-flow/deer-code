@@ -1,6 +1,7 @@
 import os
 
 from langchain_deepseek import ChatDeepSeek
+from langchain_openai.chat_models import ChatOpenAI
 
 from deer_code.config.config import get_config_section
 
@@ -22,7 +23,13 @@ def init_chat_model():
     rest_settings = settings.copy()
     del rest_settings["model"]
     del rest_settings["api_key"]
-    model = ChatDeepSeek(model=model, api_key=api_key, **rest_settings)
+    if settings.get("type") == "deepseek" or settings.get("type") == "doubao":
+        del rest_settings["type"]
+        model = ChatDeepSeek(model=model, api_key=api_key, **rest_settings)
+    else:
+        if rest_settings.get("type"):
+            del rest_settings["type"]
+        model = ChatOpenAI(model=model, api_key=api_key, **rest_settings)
     return model
 
 
